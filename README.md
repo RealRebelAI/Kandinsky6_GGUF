@@ -1,4 +1,3 @@
-# Kandinsky 6
 
 # Kandinsky6 GGUF for ComfyUI
 
