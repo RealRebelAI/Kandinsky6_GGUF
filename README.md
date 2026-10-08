@@ -10,31 +10,6 @@ Requires ComfyUI **0.38.0+** and Python 3.10+. Model loading and offloading are 
 by ComfyUI; the Python inference pipeline and Diffusers library are not required.
 No ComfyUI core patches are needed. For older NVIDIA drivers, see **Compatibility** below.
 
-## Install
-
-Once the Registry versions are available:
-
-1. Open **ComfyUI Manager** and its custom-node list.
-2. Search for `kandinsky6` and `kandinsky6-sr` (publisher `kandinskylab`) and click **Install** for both.
-3. Restart ComfyUI, then follow **Models** and **Run** below.
-
-Alternatively, with [comfy-cli](https://docs.comfy.org/comfy-cli/getting-started)
-and ComfyUI Manager installed:
-
-```bash
-comfy --workspace /path/to/ComfyUI node install kandinsky6 kandinsky6-sr
-```
-
-Replace `/path/to/ComfyUI` with your ComfyUI folder and restart after installation.
-The base generation nodes work without SR, but the bundled workflows need both extensions.
-
-For manual installation, clone `kandinskylab/kandinsky-6` outside `custom_nodes/`,
-copy the contents of `comfyui/` into `ComfyUI/custom_nodes/kandinsky6/`, then run with
-**ComfyUI's Python** and restart:
-
-```bash
-python -m pip install -r ComfyUI/custom_nodes/kandinsky6/requirements.txt
-```
 
 ## Models
 
