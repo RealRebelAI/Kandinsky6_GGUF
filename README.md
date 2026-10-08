@@ -1,15 +1,129 @@
 # Kandinsky 6
 
-Text-to-video+audio and image-to-video+audio with Kandinsky 6 Pro.
-Two ready-to-run workflows default to **Pro distilled PiFlow (10 steps, CFG=1)**,
-with an I2VA reference portrait. Non-distilled Pro and MagCache remain supported.
-Both include native **Qwen3.5-9B** prompt beautification and use the separate
-**Kandinsky6 SR** extension for super resolution.
+# Kandinsky6 GGUF for ComfyUI
 
-Requires ComfyUI **0.38.0+** and Python 3.10+. Model loading and offloading are managed
-by ComfyUI; the Python inference pipeline and Diffusers library are not required.
-No ComfyUI core patches are needed. For older NVIDIA drivers, see **Compatibility** below.
+GGUF-compatible Kandinsky 6 Pro nodes for my **Kandinsky 6.0 Pro 5s** and **Kandinsky 6.0 Pro Distilled 5s** GGUF releases.
 
+This is a modified version of the official Kandinsky 6 ComfyUI implementation with the additional compatibility handling required to run Kandinsky through **ComfyUI-GGUF**.
+
+It supports:
+
+- **Text-to-video + audio**
+- **Image-to-video + audio**
+- **Kandinsky 6.0 Pro 5s**
+- **Kandinsky 6.0 Pro Distilled 5s**
+- **GGUF Q3_K_S / Q4_K_S / Q5_K_S / Q6_K**
+- **10-step PiFlow inference for Distilled Pro**
+- **50-step inference + MagCache support for regular Pro**
+
+> This repository is intended for the GGUF releases from **RealRebelAI**.  
+> If you are using the native/W4A8 Kandinsky models instead, use the official Kandinsky 6 nodes.
+
+---
+
+# Installation
+
+GGUF users need **both** of my compatibility repositories:
+
+### 1. Kandinsky6_GGUF
+
+This repository provides the Kandinsky-side GGUF compatibility changes.
+
+```bash
+git clone https://github.com/RealRebelAI/Kandinsky6_GGUF.git
+```
+
+Clone it into:
+
+```text
+ComfyUI/custom_nodes/Kandinsky6_GGUF
+```
+
+### 2. ComfyUI-GGUF-Rebel
+
+My ComfyUI-GGUF fork is also required:
+
+https://github.com/RealRebelAI/ComfyUI-GGUF-Rebel
+
+```bash
+git clone https://github.com/RealRebelAI/ComfyUI-GGUF-Rebel.git
+```
+
+Clone it into:
+
+```text
+ComfyUI/custom_nodes/ComfyUI-GGUF-Rebel
+```
+
+Your custom nodes folder should look roughly like:
+
+```text
+ComfyUI/
+└── custom_nodes/
+    ├── Kandinsky6_GGUF/
+    └── ComfyUI-GGUF-Rebel/
+```
+
+Restart ComfyUI after installing both repositories.
+
+> **Do not install the official Kandinsky6 node package alongside `Kandinsky6_GGUF`.**
+>
+> `Kandinsky6_GGUF` is the Kandinsky node set for the GGUF workflow and replaces the stock Kandinsky nodes for this setup.
+
+---
+
+# Why Are Modified Nodes Required?
+
+Kandinsky 6 contains FP32 Linear operations that normally use ComfyUI's standard weight-casting path.
+
+GGUF weights are stored in packed quantized form. They must be dequantized before these Kandinsky FP32 operations are executed.
+
+`Kandinsky6_GGUF` adds GGUF-aware handling so packed weights are correctly passed through the GGUF dequantization path before reaching Kandinsky's FP32 Linear operations.
+
+`ComfyUI-GGUF-Rebel` provides the corresponding GGUF loader compatibility for newer ComfyUI Linear operations, including support for:
+
+```text
+input_act
+act_weight
+act_eps
+residual
+residual_scale
+```
+
+Both pieces are currently required for the Kandinsky GGUF releases.
+
+---
+
+# Requirements
+
+- **ComfyUI 0.38.0+**
+- **Python 3.10+**
+- `Kandinsky6_GGUF`
+- `ComfyUI-GGUF-Rebel`
+- Required Kandinsky text encoders, VAEs, audio models, and vocoder
+
+Model loading and offloading are handled through ComfyUI.
+
+The standalone Diffusers inference pipeline is **not required**.
+
+No manual ComfyUI core modifications are required when using the two repositories above.
+
+---
+
+# Model Releases
+
+The matching quantized models are available here:
+
+https://huggingface.co/realrebelai/Kandinsky-6.0-Pro-5s_GGUFs
+
+The repository contains GGUF and W4A8 conversions of:
+
+- **Kandinsky 6.0 Pro 5s**
+- **Kandinsky 6.0 Pro Distilled 5s**
+
+For **W4A8**, use the official Kandinsky nodes.
+
+For **GGUF**, use this repository together with `ComfyUI-GGUF-Rebel`.
 
 ## Models
 
